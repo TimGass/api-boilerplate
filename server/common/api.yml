@@ -1,0 +1,260 @@
+openapi: 3.0.1
+info:
+  title: api-boilerplate
+  description: API
+  version: 1.0.0
+servers:
+  - url: /api/v1
+tags:
+  - name: Users
+    description: Simple Users endpoints
+  - name: Specification
+    description: The swagger API specification
+paths:
+  /users:
+    post:
+      tags:
+        - Users
+      description: Create a new User
+      requestBody:
+        description: a User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      responses:
+        201:
+          description: Return the user with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        4XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        5XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Users
+      description: Patch a User
+      requestBody:
+        description: a User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+        required: true
+      responses:
+        201:
+          description: Return the user with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        4XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        5XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      security:
+        - ApiKeyAuth: []
+      tags:
+        - Users
+      description: Remove a User
+      requestBody:
+        description: a User
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+        required: true
+      responses:
+        201:
+          description: Return the user with the specified id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        4XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        5XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /login:
+    post:
+      tags:
+      - Users
+      description: Login
+      requestBody:
+        description: a user
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBody'
+      responses:
+        201:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+        4XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        5XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /me:
+    get:
+      security:
+        - ApiKeyAuth: []
+      tags:
+      - Users
+      description: Route to return logged in user.
+      responses:
+        201:
+          description: User object retrieved.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBody'
+        4XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        5XX:
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /spec:
+    get:
+      tags:
+        - Specification
+      responses:
+        200:
+          description: Return the API specification
+          content: {}
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Example:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: example 3
+    Error:
+      type: object
+      additionalProperties: true
+
+    ExampleBody:
+      title: example
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          example: no_stress
+
+    User:
+      type: object
+      title: User
+      required:
+        - username
+      properties:
+        username:
+          type: string
+          example: yoloman1
+
+    UserBody:
+      type: object
+      title: User
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: yoloman1
+          description: Only alphanumeric characters and underscore allowed.
+        password:
+          type: string
+          example: some protected string
+
+    UserCreate:
+      type: object
+      title: User
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: yoloman1
+          description: Only alphanumeric characters and underscore allowed.
+        password:
+          type: string
+          example: some protected string
+
+    UpdateUser:
+      type: object
+      title: User
+      required:
+        - id
+        - username
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+          example: yoloman1
+          description: Only alphanumeric characters and underscore allowed.
